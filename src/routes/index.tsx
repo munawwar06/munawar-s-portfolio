@@ -1,5 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useState } from "react";
+import emailjs from "@emailjs/browser";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -341,16 +342,29 @@ function Projects() {
 
 function Contact() {
   const [loading, setLoading] = useState(false);
-  const onSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const form = e.currentTarget;
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      toast.success("Message ready!", {
+    try {
+      await emailjs.sendForm(
+        "service_0vbp4l5",
+        "template_zz9gdan",
+        form,
+        { publicKey: "wXMFAVDxKqod7AI8c" },
+      );
+      toast.success("Message sent!", {
         description: "Thanks — I'll get back to you soon.",
       });
-      (e.target as HTMLFormElement).reset();
-    }, 700);
+      form.reset();
+    } catch (err) {
+      console.error("EmailJS error:", err);
+      toast.error("Couldn't send message", {
+        description: "Please try again or email me directly.",
+      });
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -407,15 +421,15 @@ function Contact() {
             <form onSubmit={onSubmit} className="space-y-4">
               <div>
                 <label htmlFor="name" className="text-sm mb-2 block">Name</label>
-                <Input id="name" required placeholder="Your name" />
+                <Input id="name" name="name" required placeholder="Your name" />
               </div>
               <div>
                 <label htmlFor="email" className="text-sm mb-2 block">Email</label>
-                <Input id="email" type="email" required placeholder="you@example.com" />
+                <Input id="email" name="email" type="email" required placeholder="you@example.com" />
               </div>
               <div>
                 <label htmlFor="message" className="text-sm mb-2 block">Message</label>
-                <Textarea id="message" required placeholder="Tell me about your idea or opportunity..." rows={5} />
+                <Textarea id="message" name="message" required placeholder="Tell me about your idea or opportunity..." rows={5} />
               </div>
               <Button type="submit" variant="hero" size="lg" className="w-full" disabled={loading}>
                 {loading ? "Sending..." : "Send Message"}

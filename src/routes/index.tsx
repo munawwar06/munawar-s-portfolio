@@ -398,7 +398,7 @@ function Contact() {
               </div>
             </a>
             <Button variant="hero" size="lg" className="w-full" asChild>
-              <a href="mailto:muhammedmunawwar09@gmail.com?subject=Resume Request">
+              <a href="/mohammed-munawar-cv.pdf" download>
                 <Download /> Download Resume
               </a>
             </Button>

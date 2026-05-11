@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiTransactionsRouteImport } from './routes/api/transactions'
 import { Route as ApiSummaryRouteImport } from './routes/api/summary'
+import { Route as ApiExportRouteImport } from './routes/api/export'
 import { Route as ApiCategoriesRouteImport } from './routes/api/categories'
 import { Route as ApiTransactionsIdRouteImport } from './routes/api/transactions.$id'
 import { Route as ApiAuthRegisterRouteImport } from './routes/api/auth/register'
@@ -30,6 +31,11 @@ const ApiTransactionsRoute = ApiTransactionsRouteImport.update({
 const ApiSummaryRoute = ApiSummaryRouteImport.update({
   id: '/api/summary',
   path: '/api/summary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiExportRoute = ApiExportRouteImport.update({
+  id: '/api/export',
+  path: '/api/export',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCategoriesRoute = ApiCategoriesRouteImport.update({
@@ -56,6 +62,7 @@ const ApiAuthLoginRoute = ApiAuthLoginRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/categories': typeof ApiCategoriesRoute
+  '/api/export': typeof ApiExportRoute
   '/api/summary': typeof ApiSummaryRoute
   '/api/transactions': typeof ApiTransactionsRouteWithChildren
   '/api/auth/login': typeof ApiAuthLoginRoute
@@ -65,6 +72,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/categories': typeof ApiCategoriesRoute
+  '/api/export': typeof ApiExportRoute
   '/api/summary': typeof ApiSummaryRoute
   '/api/transactions': typeof ApiTransactionsRouteWithChildren
   '/api/auth/login': typeof ApiAuthLoginRoute
@@ -75,6 +83,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/categories': typeof ApiCategoriesRoute
+  '/api/export': typeof ApiExportRoute
   '/api/summary': typeof ApiSummaryRoute
   '/api/transactions': typeof ApiTransactionsRouteWithChildren
   '/api/auth/login': typeof ApiAuthLoginRoute
@@ -86,6 +95,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/api/categories'
+    | '/api/export'
     | '/api/summary'
     | '/api/transactions'
     | '/api/auth/login'
@@ -95,6 +105,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/api/categories'
+    | '/api/export'
     | '/api/summary'
     | '/api/transactions'
     | '/api/auth/login'
@@ -104,6 +115,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/api/categories'
+    | '/api/export'
     | '/api/summary'
     | '/api/transactions'
     | '/api/auth/login'
@@ -114,6 +126,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiCategoriesRoute: typeof ApiCategoriesRoute
+  ApiExportRoute: typeof ApiExportRoute
   ApiSummaryRoute: typeof ApiSummaryRoute
   ApiTransactionsRoute: typeof ApiTransactionsRouteWithChildren
   ApiAuthLoginRoute: typeof ApiAuthLoginRoute
@@ -141,6 +154,13 @@ declare module '@tanstack/react-router' {
       path: '/api/summary'
       fullPath: '/api/summary'
       preLoaderRoute: typeof ApiSummaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/export': {
+      id: '/api/export'
+      path: '/api/export'
+      fullPath: '/api/export'
+      preLoaderRoute: typeof ApiExportRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/categories': {
@@ -189,6 +209,7 @@ const ApiTransactionsRouteWithChildren = ApiTransactionsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiCategoriesRoute: ApiCategoriesRoute,
+  ApiExportRoute: ApiExportRoute,
   ApiSummaryRoute: ApiSummaryRoute,
   ApiTransactionsRoute: ApiTransactionsRouteWithChildren,
   ApiAuthLoginRoute: ApiAuthLoginRoute,

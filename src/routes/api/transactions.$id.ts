@@ -1,5 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { corsPreflight, json, readJson, requireAuth } from "@/lib/api.server";
+import type { Database } from "@/integrations/supabase/types";
+
+type TxUpdate = Database["public"]["Tables"]["transactions"]["Update"];
 
 export const Route = createFileRoute("/api/transactions/$id")({
   server: {
@@ -28,7 +31,7 @@ export const Route = createFileRoute("/api/transactions/$id")({
           description?: string | null;
         }>(request);
         if (!body) return json({ error: "Invalid JSON" }, 400);
-        const patch: Record<string, unknown> = {};
+        const patch: TxUpdate = {};
         if (body.amount !== undefined) {
           if (body.amount < 0) return json({ error: "amount must be >= 0" }, 400);
           patch.amount = body.amount;

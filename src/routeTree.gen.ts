@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VaultRouteImport } from './routes/vault'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiTransactionsRouteImport } from './routes/api/transactions'
 import { Route as ApiSummaryRouteImport } from './routes/api/summary'
@@ -18,6 +19,11 @@ import { Route as ApiTransactionsIdRouteImport } from './routes/api/transactions
 import { Route as ApiAuthRegisterRouteImport } from './routes/api/auth/register'
 import { Route as ApiAuthLoginRouteImport } from './routes/api/auth/login'
 
+const VaultRoute = VaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -61,6 +67,7 @@ const ApiAuthLoginRoute = ApiAuthLoginRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/vault': typeof VaultRoute
   '/api/categories': typeof ApiCategoriesRoute
   '/api/export': typeof ApiExportRoute
   '/api/summary': typeof ApiSummaryRoute
@@ -71,6 +78,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/vault': typeof VaultRoute
   '/api/categories': typeof ApiCategoriesRoute
   '/api/export': typeof ApiExportRoute
   '/api/summary': typeof ApiSummaryRoute
@@ -82,6 +90,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/vault': typeof VaultRoute
   '/api/categories': typeof ApiCategoriesRoute
   '/api/export': typeof ApiExportRoute
   '/api/summary': typeof ApiSummaryRoute
@@ -94,6 +103,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/vault'
     | '/api/categories'
     | '/api/export'
     | '/api/summary'
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/vault'
     | '/api/categories'
     | '/api/export'
     | '/api/summary'
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/vault'
     | '/api/categories'
     | '/api/export'
     | '/api/summary'
@@ -125,6 +137,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  VaultRoute: typeof VaultRoute
   ApiCategoriesRoute: typeof ApiCategoriesRoute
   ApiExportRoute: typeof ApiExportRoute
   ApiSummaryRoute: typeof ApiSummaryRoute
@@ -135,6 +148,13 @@ export interface RootRouteChildren {
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vault': {
+      id: '/vault'
+      path: '/vault'
+      fullPath: '/vault'
+      preLoaderRoute: typeof VaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -208,6 +228,7 @@ const ApiTransactionsRouteWithChildren = ApiTransactionsRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  VaultRoute: VaultRoute,
   ApiCategoriesRoute: ApiCategoriesRoute,
   ApiExportRoute: ApiExportRoute,
   ApiSummaryRoute: ApiSummaryRoute,
@@ -218,3 +239,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

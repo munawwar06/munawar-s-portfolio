@@ -14,7 +14,77 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      categories: {
+        Row: {
+          created_at: string
+          id: string
+          is_default: boolean
+          name: string
+          type: Database["public"]["Enums"]["category_type"]
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name: string
+          type: Database["public"]["Enums"]["category_type"]
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name?: string
+          type?: Database["public"]["Enums"]["category_type"]
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      transactions: {
+        Row: {
+          amount: number
+          category_id: string | null
+          created_at: string
+          date: string
+          description: string | null
+          id: string
+          type: Database["public"]["Enums"]["category_type"]
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          category_id?: string | null
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+          type: Database["public"]["Enums"]["category_type"]
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          category_id?: string | null
+          created_at?: string
+          date?: string
+          description?: string | null
+          id?: string
+          type?: Database["public"]["Enums"]["category_type"]
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "transactions_category_id_fkey"
+            columns: ["category_id"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
@@ -23,7 +93,7 @@ export type Database = {
       [_ in never]: never
     }
     Enums: {
-      [_ in never]: never
+      category_type: "income" | "expense"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +220,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      category_type: ["income", "expense"],
+    },
   },
 } as const

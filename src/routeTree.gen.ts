@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ApiTransactionsRouteImport } from './routes/api/transactions'
+import { Route as ApiSummaryRouteImport } from './routes/api/summary'
 import { Route as ApiCategoriesRouteImport } from './routes/api/categories'
 import { Route as ApiTransactionsIdRouteImport } from './routes/api/transactions.$id'
 import { Route as ApiAuthRegisterRouteImport } from './routes/api/auth/register'
@@ -24,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 const ApiTransactionsRoute = ApiTransactionsRouteImport.update({
   id: '/api/transactions',
   path: '/api/transactions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSummaryRoute = ApiSummaryRouteImport.update({
+  id: '/api/summary',
+  path: '/api/summary',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ApiCategoriesRoute = ApiCategoriesRouteImport.update({
@@ -50,6 +56,7 @@ const ApiAuthLoginRoute = ApiAuthLoginRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/api/categories': typeof ApiCategoriesRoute
+  '/api/summary': typeof ApiSummaryRoute
   '/api/transactions': typeof ApiTransactionsRouteWithChildren
   '/api/auth/login': typeof ApiAuthLoginRoute
   '/api/auth/register': typeof ApiAuthRegisterRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/api/categories': typeof ApiCategoriesRoute
+  '/api/summary': typeof ApiSummaryRoute
   '/api/transactions': typeof ApiTransactionsRouteWithChildren
   '/api/auth/login': typeof ApiAuthLoginRoute
   '/api/auth/register': typeof ApiAuthRegisterRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/api/categories': typeof ApiCategoriesRoute
+  '/api/summary': typeof ApiSummaryRoute
   '/api/transactions': typeof ApiTransactionsRouteWithChildren
   '/api/auth/login': typeof ApiAuthLoginRoute
   '/api/auth/register': typeof ApiAuthRegisterRoute
@@ -77,6 +86,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/api/categories'
+    | '/api/summary'
     | '/api/transactions'
     | '/api/auth/login'
     | '/api/auth/register'
@@ -85,6 +95,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/api/categories'
+    | '/api/summary'
     | '/api/transactions'
     | '/api/auth/login'
     | '/api/auth/register'
@@ -93,6 +104,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/api/categories'
+    | '/api/summary'
     | '/api/transactions'
     | '/api/auth/login'
     | '/api/auth/register'
@@ -102,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ApiCategoriesRoute: typeof ApiCategoriesRoute
+  ApiSummaryRoute: typeof ApiSummaryRoute
   ApiTransactionsRoute: typeof ApiTransactionsRouteWithChildren
   ApiAuthLoginRoute: typeof ApiAuthLoginRoute
   ApiAuthRegisterRoute: typeof ApiAuthRegisterRoute
@@ -121,6 +134,13 @@ declare module '@tanstack/react-router' {
       path: '/api/transactions'
       fullPath: '/api/transactions'
       preLoaderRoute: typeof ApiTransactionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/summary': {
+      id: '/api/summary'
+      path: '/api/summary'
+      fullPath: '/api/summary'
+      preLoaderRoute: typeof ApiSummaryRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/api/categories': {
@@ -169,6 +189,7 @@ const ApiTransactionsRouteWithChildren = ApiTransactionsRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ApiCategoriesRoute: ApiCategoriesRoute,
+  ApiSummaryRoute: ApiSummaryRoute,
   ApiTransactionsRoute: ApiTransactionsRouteWithChildren,
   ApiAuthLoginRoute: ApiAuthLoginRoute,
   ApiAuthRegisterRoute: ApiAuthRegisterRoute,
@@ -176,3 +197,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}

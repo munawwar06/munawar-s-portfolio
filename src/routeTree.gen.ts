@@ -9,38 +9,152 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as VaultRouteImport } from './routes/vault'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as ApiTransactionsRouteImport } from './routes/api/transactions'
+import { Route as ApiSummaryRouteImport } from './routes/api/summary'
+import { Route as ApiExportRouteImport } from './routes/api/export'
+import { Route as ApiCategoriesRouteImport } from './routes/api/categories'
+import { Route as ApiTransactionsIdRouteImport } from './routes/api/transactions.$id'
+import { Route as ApiAuthRegisterRouteImport } from './routes/api/auth/register'
+import { Route as ApiAuthLoginRouteImport } from './routes/api/auth/login'
 
+const VaultRoute = VaultRouteImport.update({
+  id: '/vault',
+  path: '/vault',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiTransactionsRoute = ApiTransactionsRouteImport.update({
+  id: '/api/transactions',
+  path: '/api/transactions',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiSummaryRoute = ApiSummaryRouteImport.update({
+  id: '/api/summary',
+  path: '/api/summary',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiExportRoute = ApiExportRouteImport.update({
+  id: '/api/export',
+  path: '/api/export',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiCategoriesRoute = ApiCategoriesRouteImport.update({
+  id: '/api/categories',
+  path: '/api/categories',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiTransactionsIdRoute = ApiTransactionsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ApiTransactionsRoute,
+} as any)
+const ApiAuthRegisterRoute = ApiAuthRegisterRouteImport.update({
+  id: '/api/auth/register',
+  path: '/api/auth/register',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ApiAuthLoginRoute = ApiAuthLoginRouteImport.update({
+  id: '/api/auth/login',
+  path: '/api/auth/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/vault': typeof VaultRoute
+  '/api/categories': typeof ApiCategoriesRoute
+  '/api/export': typeof ApiExportRoute
+  '/api/summary': typeof ApiSummaryRoute
+  '/api/transactions': typeof ApiTransactionsRouteWithChildren
+  '/api/auth/login': typeof ApiAuthLoginRoute
+  '/api/auth/register': typeof ApiAuthRegisterRoute
+  '/api/transactions/$id': typeof ApiTransactionsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/vault': typeof VaultRoute
+  '/api/categories': typeof ApiCategoriesRoute
+  '/api/export': typeof ApiExportRoute
+  '/api/summary': typeof ApiSummaryRoute
+  '/api/transactions': typeof ApiTransactionsRouteWithChildren
+  '/api/auth/login': typeof ApiAuthLoginRoute
+  '/api/auth/register': typeof ApiAuthRegisterRoute
+  '/api/transactions/$id': typeof ApiTransactionsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/vault': typeof VaultRoute
+  '/api/categories': typeof ApiCategoriesRoute
+  '/api/export': typeof ApiExportRoute
+  '/api/summary': typeof ApiSummaryRoute
+  '/api/transactions': typeof ApiTransactionsRouteWithChildren
+  '/api/auth/login': typeof ApiAuthLoginRoute
+  '/api/auth/register': typeof ApiAuthRegisterRoute
+  '/api/transactions/$id': typeof ApiTransactionsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/vault'
+    | '/api/categories'
+    | '/api/export'
+    | '/api/summary'
+    | '/api/transactions'
+    | '/api/auth/login'
+    | '/api/auth/register'
+    | '/api/transactions/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/vault'
+    | '/api/categories'
+    | '/api/export'
+    | '/api/summary'
+    | '/api/transactions'
+    | '/api/auth/login'
+    | '/api/auth/register'
+    | '/api/transactions/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/vault'
+    | '/api/categories'
+    | '/api/export'
+    | '/api/summary'
+    | '/api/transactions'
+    | '/api/auth/login'
+    | '/api/auth/register'
+    | '/api/transactions/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  VaultRoute: typeof VaultRoute
+  ApiCategoriesRoute: typeof ApiCategoriesRoute
+  ApiExportRoute: typeof ApiExportRoute
+  ApiSummaryRoute: typeof ApiSummaryRoute
+  ApiTransactionsRoute: typeof ApiTransactionsRouteWithChildren
+  ApiAuthLoginRoute: typeof ApiAuthLoginRoute
+  ApiAuthRegisterRoute: typeof ApiAuthRegisterRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/vault': {
+      id: '/vault'
+      path: '/vault'
+      fullPath: '/vault'
+      preLoaderRoute: typeof VaultRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,21 +162,80 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/transactions': {
+      id: '/api/transactions'
+      path: '/api/transactions'
+      fullPath: '/api/transactions'
+      preLoaderRoute: typeof ApiTransactionsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/summary': {
+      id: '/api/summary'
+      path: '/api/summary'
+      fullPath: '/api/summary'
+      preLoaderRoute: typeof ApiSummaryRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/export': {
+      id: '/api/export'
+      path: '/api/export'
+      fullPath: '/api/export'
+      preLoaderRoute: typeof ApiExportRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/categories': {
+      id: '/api/categories'
+      path: '/api/categories'
+      fullPath: '/api/categories'
+      preLoaderRoute: typeof ApiCategoriesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/transactions/$id': {
+      id: '/api/transactions/$id'
+      path: '/$id'
+      fullPath: '/api/transactions/$id'
+      preLoaderRoute: typeof ApiTransactionsIdRouteImport
+      parentRoute: typeof ApiTransactionsRoute
+    }
+    '/api/auth/register': {
+      id: '/api/auth/register'
+      path: '/api/auth/register'
+      fullPath: '/api/auth/register'
+      preLoaderRoute: typeof ApiAuthRegisterRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/api/auth/login': {
+      id: '/api/auth/login'
+      path: '/api/auth/login'
+      fullPath: '/api/auth/login'
+      preLoaderRoute: typeof ApiAuthLoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
+interface ApiTransactionsRouteChildren {
+  ApiTransactionsIdRoute: typeof ApiTransactionsIdRoute
+}
+
+const ApiTransactionsRouteChildren: ApiTransactionsRouteChildren = {
+  ApiTransactionsIdRoute: ApiTransactionsIdRoute,
+}
+
+const ApiTransactionsRouteWithChildren = ApiTransactionsRoute._addFileChildren(
+  ApiTransactionsRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  VaultRoute: VaultRoute,
+  ApiCategoriesRoute: ApiCategoriesRoute,
+  ApiExportRoute: ApiExportRoute,
+  ApiSummaryRoute: ApiSummaryRoute,
+  ApiTransactionsRoute: ApiTransactionsRouteWithChildren,
+  ApiAuthLoginRoute: ApiAuthLoginRoute,
+  ApiAuthRegisterRoute: ApiAuthRegisterRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
